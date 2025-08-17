@@ -81,4 +81,14 @@ def get_messages(page_size=100, offset=0):
     
     return messagecount, message_records
 
+def insert_message(message, creator, sender_id, timestamp):
+    databasepath = get_database_path()
+    conn = sqlite3.connect(databasepath)
+    cur = conn.cursor()
+    
+    query = "INSERT INTO chat_messages (message, creator, sender_id, timestamp) VALUES (?, ?, ?, ?)"
+    cur.execute(query, (message, creator, sender_id, timestamp))
+    conn.commit()
+    conn.close()
+
 databasepath = get_database_path()

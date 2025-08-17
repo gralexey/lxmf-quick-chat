@@ -1,11 +1,9 @@
 #!/usr/bin/python
-
 print("#!c=0")
 
 import os
 from datetime import datetime
-import sqlite3
-from utils import sanitize, format_message_time, find_name, initialize_db_if_needed, get_messages, databasepath
+from utils import sanitize, format_message_time, find_name, initialize_db_if_needed, get_messages, insert_message
 import RNS
 RNS.Reticulum()
 RNS.Identity.load_known_destinations()
@@ -18,7 +16,6 @@ initialize_db_if_needed()
 id_hash = None
 passed_name = ''
 message_payload = None
-
 for e in os.environ:
   if e == "remote_identity":
     id_hash = os.environ[e]
@@ -52,15 +49,8 @@ if message_payload:
         message_payload = message_payload[:500] + "<message truncated>"
     
     if message_payload != "":
-        conn = sqlite3.connect(databasepath)
-        cur = conn.cursor()
-        
         name_to_save = username if username else passed_name
-        
-        query = "INSERT INTO chat_messages (message, creator, sender_id, timestamp) VALUES (?, ?, ?, ?)"
-        cur.execute(query, (message_payload, name_to_save, id_hash, str(datetime.now().timestamp())))
-        conn.commit()
-        conn.close()
+        insert_message(message_payload, name_to_save, id_hash, str(datetime.now().timestamp()))
         print("``")
 
 message_count, message_records = get_messages(page_size, 0)
