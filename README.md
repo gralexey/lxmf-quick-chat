@@ -26,6 +26,8 @@ A lightweight chat script for NomadNet nodes.
 
 You're ready to go!
 
+<img width="1080" height="718" alt="Screenshot 2025-08-17 at 22 48 55" src="https://github.com/user-attachments/assets/3199ce7c-7361-4861-8a9e-7cd2712d8759" />
+
 ## Identification
 
 This script can automatically pull your announced name if you identify yourself:
