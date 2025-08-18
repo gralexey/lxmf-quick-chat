@@ -59,7 +59,7 @@ def initialize_db_if_needed():
     if not os.path.isfile(databasepath):
         conn = sqlite3.connect(databasepath)
         cur = conn.cursor()
-        query = "CREATE TABLE chat_messages (id INTEGER PRIMARY KEY AUTOINCREMENT, message TEXT, creator TEXT, sender_id TEXT, timestamp TEXT, deleted INTEGER DEFAULT 0)"
+        query = "CREATE TABLE chat_messages (id TEXT PRIMARY KEY, message TEXT, creator TEXT, sender_id TEXT, timestamp TEXT)"
         cur.execute(query)
         conn.commit()
         conn.close()
@@ -69,11 +69,11 @@ def get_messages(page_size=100, offset=0):
     conn = sqlite3.connect(databasepath)
     cur = conn.cursor()
     
-    query = "SELECT COUNT(*) FROM chat_messages WHERE deleted = 0"
+    query = "SELECT COUNT(*) FROM chat_messages"
     cur.execute(query)
     messagecount = cur.fetchall()[0][0]
     
-    query = "SELECT message, creator, sender_id, timestamp FROM chat_messages WHERE deleted = 0 ORDER BY timestamp DESC LIMIT ? OFFSET ?"
+    query = "SELECT message, creator, sender_id, timestamp FROM chat_messages ORDER BY timestamp DESC LIMIT ? OFFSET ?"
     cur.execute(query, (page_size, offset))
     message_records = cur.fetchall()
     
@@ -81,14 +81,46 @@ def get_messages(page_size=100, offset=0):
     
     return messagecount, message_records
 
-def insert_message(message, creator, sender_id, timestamp):
+def insert_message(id, message, creator, sender_id, timestamp):
     databasepath = get_database_path()
     conn = sqlite3.connect(databasepath)
     cur = conn.cursor()
     
-    query = "INSERT INTO chat_messages (message, creator, sender_id, timestamp) VALUES (?, ?, ?, ?)"
-    cur.execute(query, (message, creator, sender_id, timestamp))
+    query = "INSERT INTO chat_messages (id, message, creator, sender_id, timestamp) VALUES (?, ?, ?, ?, ?)"
+    cur.execute(query, (id, message, creator, sender_id, timestamp))
     conn.commit()
     conn.close()
+    
+def get_messages(page_size=100, offset=0):
+    databasepath = get_database_path()
+    conn = sqlite3.connect(databasepath)
+    cur = conn.cursor()
+    
+    query = "SELECT COUNT(*) FROM chat_messages"
+    cur.execute(query)
+    messagecount = cur.fetchall()[0][0]
+    
+    query = "SELECT message, creator, sender_id, timestamp FROM chat_messages ORDER BY timestamp DESC LIMIT ? OFFSET ?"
+    cur.execute(query, (page_size, offset))
+    message_records = cur.fetchall()
+    
+    conn.close()
+    
+    return messagecount, message_records
+
+def check_if_message_exists(id):
+    databasepath = get_database_path()
+    conn = sqlite3.connect(databasepath)
+    cur = conn.cursor()
+    
+    query = "SELECT COUNT(*) FROM chat_messages WHERE id = ?"
+    cur.execute(query, (id,))
+    count = cur.fetchall()[0][0]
+    
+    conn.close()
+    
+    return count > 0
+
+
 
 databasepath = get_database_path()
