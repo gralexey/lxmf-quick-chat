@@ -26,7 +26,8 @@ A lightweight chat script for NomadNet nodes.
 
 You're ready to go!
 
-<img width="1080" height="718" alt="Screenshot 2025-08-17 at 22 48 55" src="https://github.com/user-attachments/assets/3199ce7c-7361-4861-8a9e-7cd2712d8759" />
+<img width="1080" alt="Screenshot 2025-10-06 at 19 17 34" src="https://github.com/user-attachments/assets/b66c74b5-4512-4425-8832-0f3e96be0b23" />
+
 
 ## Identification
 
