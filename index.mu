@@ -40,7 +40,7 @@ if id_hash == None:
 else:
   short_id_hash = id_hash[:8]
   namePart = f' ({username})' if username else ''
-  print("Identified as " + short_id_hash + namePart)
+  print("\nIdentified as " + short_id_hash + namePart)
   print("")
 
 print("`!`F222`B7FD")
@@ -66,14 +66,19 @@ if message_payload:
 
 message_count, message_records = get_messages(page_size, 0)
 
-print("`F8ffRecent Messages:`f")
+if username:
+  initial_name = username
+else:
+  initial_name = passed_name if passed_name else "Guest"
+print(f'`FfffName: `B333`<15|namepayload`{initial_name}>`` `FfffMessage: `B333`<50|messagepayload`>`` `Ffff`[SEND`:/page/index.mu`namepayload|messagepayload|nonce={secrets.token_hex(16) }]`f')
+
 print("``")
 print("")
 
 if len(message_records) == 0:
     print("No messages yet. Be the first to chat!\n")
 else:
-    for message_record in reversed(message_records): 
+    for message_record in message_records: 
         print("``")
         
         sent_at = format_message_time(message_record[3])
@@ -81,16 +86,9 @@ else:
         sender_id = message_record[2]
         text = sanitize(message_record[0])
         
-        print(f'`F8ff`!\\[{sent_at}]: `Ffff{name}: ``{text}')
+        print(f'`F8ff`!\\[{sent_at}] `Ffff{name}: ``{text}')
 
 print("``")
-print("")
-
-if username:
-  initial_name = username
-else:
-  initial_name = passed_name if passed_name else "Guest"
   
-print(f'`FfffName: `B333`<15|namepayload`{initial_name}>`` `FfffMessage: `B333`<50|messagepayload`>`` `Ffff`[SEND`:/page/index.mu`namepayload|messagepayload|nonce={secrets.token_hex(16) }]`f')
-
 print(footer())
+
