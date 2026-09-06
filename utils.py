@@ -19,24 +19,23 @@ def format_message_time(timestamp):
 def find_name(id_hash):
     if id_hash == None:
         return None
+
     identity = RNS.Identity.recall(bytes.fromhex(id_hash), from_identity_hash=True)
     if not identity:
         return
-    pub_key = identity.get_public_key()
-    for key in RNS.Identity.known_destinations:
-        v = RNS.Identity.known_destinations[key]
-        if v[2] == pub_key:
-            ad = extract_name(key.hex()) if (len(v) > 3 and v[3]) else None
-            if ad:
-                return ad
 
-def extract_name(dest_hash):
-    if not dest_hash:
-        return '?'
-    dest = RNS.Identity.known_destinations.get(bytes.fromhex(dest_hash), None)
-    if not dest:
-        return '?'
-    return ''.join(c for c in dest[3].decode('utf-8', errors='ignore') if c.isprintable())
+    destination = RNS.Destination(
+        identity,
+        RNS.Destination.OUT,
+        RNS.Destination.SINGLE,
+        "lxmf",
+        "delivery"
+    )
+
+    app_data = RNS.Identity.recall_app_data(destination.hash)
+    if app_data is not None:
+        return ''.join(c for c in app_data.decode('utf-8', errors='ignore') if c.isprintable())
+    return
 
 def get_database_path():
     board_directory = "nomadnetwork"
