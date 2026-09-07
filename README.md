@@ -13,7 +13,7 @@ A lightweight chat script for NomadNet nodes.
 2. **Make the script executable**  
    Run:
    ```
-   chmod +x index.mu
+   chmod +x index.mu user.mu
    ```
 
 3. **Verify the Python interpreter**

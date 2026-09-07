@@ -4,7 +4,7 @@ print("#!c=0")
 import os
 import secrets
 from datetime import datetime
-from utils import sanitize, format_message_time, find_name, initialize_db_if_needed, get_messages, insert_message, check_if_message_exists
+from utils import sanitize, format_message_time, find_name, initialize_db_if_needed, get_messages, insert_message, check_if_message_exists, identified_name_markup
 from customizations import chat_name as custom_chat_name, footer as footer
 import RNS
 
@@ -39,7 +39,10 @@ if id_hash == None:
   print("")
 else:
   short_id_hash = id_hash[:8]
-  namePart = f' ({username})' if username else ''
+  if username:
+    namePart = f' ({identified_name_markup(username, id_hash)})'
+  else:
+    namePart = ''
   print("\nIdentified as " + short_id_hash + namePart)
   print("")
 
@@ -85,8 +88,9 @@ else:
         name = message_record[1]
         sender_id = message_record[2]
         text = sanitize(message_record[0])
+        display_name = identified_name_markup(name, sender_id) if sender_id else name
         
-        print(f'`F8ff`!\\[{sent_at}] `Ffff{name}: ``{text}')
+        print(f'`F8ff`!\\[{sent_at}] `Ffff{display_name}: ``{text}')
 
 print("``")
   

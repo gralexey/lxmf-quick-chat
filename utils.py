@@ -120,6 +120,17 @@ def check_if_message_exists(id):
     
     return count > 0
 
+def identified_name_markup(name, sender_id):
+    if not sender_id:
+        return name if name else "Guest"
+
+    short_id = sender_id[:8]
+    label = sanitize(name) if name else short_id
+    label = label.replace("|", "").replace("]", "").replace("[", "")
+    if not label:
+        label = short_id
+    return f'`_`[{label}`:/page/user.mu`id={short_id}|name={label}]`_'
+
 
 
 databasepath = get_database_path()
